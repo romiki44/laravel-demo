@@ -21,7 +21,7 @@ Route::get('/contact', function () {
 });*/
 
 Route::get('/', 'HomeController@home')->name('home');
-
 Route::get('/contact', 'HomeController@contact')->name('contact');
+Route::resource('/posts', 'PostController');
 
-Route::get('/blog-post/{id}/{welcome?}', 'HomeController@blogPost')->name('blog-post');
+
