@@ -2,6 +2,7 @@
 
 @section('content')
 <h1>{{$post->id}} {{$post->title}}</h1>
+
 <p>Added:{{$post->created_at->diffForHumans()}}</p>
 
 <h4>Comments</h4>
