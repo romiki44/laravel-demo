@@ -11,6 +11,9 @@ class PostTagController extends Controller
     {
         $tag=Tag::findOrFail($tag);
 
-        return view('posts.index', ['posts'=>$tag->blogPosts]);
+        return view('posts.index', [
+            //'posts'=>$tag->blogPosts //vraj menje query...ale u mna to iste
+             'posts'=>$tag->blogPosts()->latestWithRelations()->get()
+            ]);
     }
 }
