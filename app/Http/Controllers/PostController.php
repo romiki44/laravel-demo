@@ -23,38 +23,11 @@ class PostController extends Controller
      */
     public function index()
     {
-        //dd(BlogPost::all());
-        // DB::connection()->enableQueryLog();
-
-        // $posts=BlogPost::with('comments')->get();
-
-        // foreach($posts as $post) {
-        //     foreach($post->comments as $comment) {
-        //         echo $comment->content;
-        //     }
-        // }
-
-        // dd(DB::getQueryLog());
-
-        $mostCommented=Cache::remember('blog-post-commented', now()->addSecond(10), function () {
-            return BlogPost::mostCommented()->take(5)->get();
-        });
-
-        $mostActive=Cache::remember('users-most-active', now()->addSecond(10), function () {
-            return User::withMostBlogPosts()->take(5)->get();
-        });
-
-        $mostActiveLastMonth=Cache::remember('users-most-active-last-most', now()->addSecond(10), function () {
-            return User::withMostBlogPostsLastMonth()->take(5)->get();
-        });
-
         return view(
             'posts.index',
             [
-                'posts'=>BlogPost::latest()->withCount('comments')->with('user')->get(),
-                'mostCommented'=>$mostCommented,
-                'mostActive'=>$mostActive,
-                'mostActiveLastMonth'=>$mostActiveLastMonth
+                'posts'=>BlogPost::latest()->withCount('comments')
+                        ->with('user')->with('tags') ->get(),
             ]
         );
     }
@@ -109,7 +82,7 @@ class PostController extends Controller
         $counter=Cache::get($counterKey);
 
         return view('posts.show', [
-            'post'=>BlogPost::with('comments')->findOrFail($id),
+            'post'=>BlogPost::with('comments')->with('tags')->with('user')->findOrFail($id),
             'counter'=>$counter
         ]);
     }
