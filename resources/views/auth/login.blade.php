@@ -26,7 +26,7 @@
             <div class="form-check">
                 <input type="checkbox" name="remember" class="form-check-input"
                 value="{{old('remember') ? 'checked' : ''}}">
-                <label for="remember" class="form-check-labe">Remember Me</label>
+                <label for="remember" class="form-check-label">Remember Me</label>
             </div>
         </div>
 

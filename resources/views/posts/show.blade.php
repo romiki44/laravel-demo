@@ -3,12 +3,24 @@
 @section('content')
 <div class="row">
     <div class="col-8">
-        <h1>
+        @if($post->image)
+            <div style="background-image: url('{{ $post->image->url() }}'); min-height: 500px; color: white; text-align: center; background-attachment: fixed;">
+            <h1 style="padding-top: 100px; text-shadow: 1px 2px #000">
+        @else
+            <h1>
+        @endif
+
             {{$post->id}} {{$post->title}}
             @badge(['type'=>'primary', 'show'=>now()->diffInMinutes($post->created_at)<150])
                 Brand new Post!
             @endbadge
-        </h1>
+
+        @if($post->image)
+            </h1>
+            </div>
+        @else
+            </h1>
+        @endif
 
         <p>{{$post->content}}</p>
 

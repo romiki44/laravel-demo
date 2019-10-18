@@ -8,4 +8,9 @@
     <input class="form-control" type="text" name="content" value="{{old('content', $post->content ?? null)}}">
 </div>
 
+<div class="form-group">
+        <label>Thumbnail</label>
+        <input type="file" name="thumbnail" class="form-control-file">
+</div>
+
 @errors @enderrors

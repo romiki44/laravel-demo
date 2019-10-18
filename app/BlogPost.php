@@ -28,6 +28,11 @@ class BlogPost extends Model
         return $this->belongsToMany('App\Tag')->withTimestamps();
     }
 
+    public function image()
+    {
+        return $this->hasOne('App\Image');
+    }
+
     public function scopeLatest(Builder $query) {
         return $query->orderBy(static::CREATED_AT, 'desc');
     }
@@ -54,6 +59,7 @@ class BlogPost extends Model
 
         static::deleting(function(BlogPost $blogPost) {
             $blogPost->comments()->delete();
+            //$blogPost->image()->delete();
         });
 
         static::restoring(function (BlogPost $blogPost) {
