@@ -106,23 +106,9 @@ class PostController extends Controller
         $blogPost=BlogPost::create($validatedData);
 
         if($request->hasFile('thumbnail')) {
-            //$file=$request->file('thumbnail');
-            // dump($file);
-            // dump($file->getClientMimeType());
-            // dump($file->getClientOriginalExtension());
-
-            // //dump($file->store('thumbnails'));
-            // //dump(Storage::disk('public')->putFile('thumbnuils', $file));
-
-            // $name1=$file->storeAs('thumbnails', $blogPost->id . '.' . $file->guessExtension());
-            // $name2=Storage::disk('local')->putFileAs('thumbnailes', $file, $blogPost->id . '.' . $file->getClientOriginalExtension());
-
-            // dump(Storage::url($name1));
-            // dump(Storage::disk('local')->url($name2));
-
             $path=$request->file('thumbnail')->store('thumbnails');
             $blogPost->image()->save(
-                Image::create(['path'=>$path])
+                Image::make(['path'=>$path])
             );
         }
 
@@ -168,7 +154,7 @@ class PostController extends Controller
             }
             else {
                 $post->image()->save(
-                    Image::create(['path'=>$path])
+                    Image::make(['path'=>$path])
                 );
             }
         }

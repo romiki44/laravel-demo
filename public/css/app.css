@@ -6,3 +6,8 @@
   font-size: 1rem !important;
 }
 
+.avatar {
+  width: 128px;
+  height: 128px;
+}
+
