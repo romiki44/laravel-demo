@@ -13,9 +13,9 @@ class Comment extends Model
 
     protected $fillable=['user_id', 'content'];
 
-    // blog_post_id!!
-    public function blogPost() {
-        return $this->belongsTo('App\BlogPost');
+    public function commentable()
+    {
+        return $this->morphTo();
     }
 
     public function user() {
