@@ -3,21 +3,24 @@
 namespace App\Http\Controllers;
 
 use App\BlogPost;
+use App\Contracts\CounterContract;
 use App\Events\BlogPostPosted;
 use App\Http\Requests\StorePost;
 use App\Image;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 
 //use Illuminate\Support\Facades\DB;
 
 class PostController extends Controller
 {
-    public function __construct()
+    private $counter;
+
+    public function __construct(CounterContract $counter)
     {
         $this->middleware('auth')->only(['create', 'store', 'edit', 'update', 'destroy']);
         //$this->middleware('locale');
+        $this->counter=$counter;
     }
     /**
      * Display a listing of the resource.
@@ -48,44 +51,12 @@ class PostController extends Controller
         //     }])->findOrFail($id)
         // ]);
 
-        $sessionId=session()->getId();
-        $counterKey="blog-post-{$id}-counter";
-        $usersKey="blog-post-{$id}-users";
-
-        $users=Cache::get($usersKey, []);
-        $usersUpdate=[];
-        $difference=0;
-        $now=now();
-
-        $counter=0;
-
-        foreach($users as $session=>$lastVisit) {
-            if($now->diffInMinutes($lastVisit)>=1) {
-                $difference--;
-            } else {
-                $usersUpdate[$session]=$lastVisit;
-            }
-        }
-
-        if(!array_key_exists($sessionId, $users) ||
-            $now->diffInMinutes($lastVisit)>=1) {
-            $difference++;
-        }
-
-        $usersUpdate[$sessionId]=$now;
-        Cache::forever($usersKey, $usersUpdate);
-
-        if(!Cache::has($counterKey)) {
-            Cache::forever($counterKey, 1);
-        } else {
-            Cache::increment($counterKey, $difference);
-        }
-
-        $counter=Cache::get($counterKey);
+        //$counter=resolve(Counter::class);
 
         return view('posts.show', [
             'post'=>BlogPost::with('comments')->with('tags')->with('user')->findOrFail($id),
-            'counter'=>$counter
+            //'counter'=>$counter->increment("blog-post-{$id}-counter", ['blog-post']),
+            'counter'=>$this->counter->increment("blog-post-{$id}-counter", ['blog-post'])
         ]);
     }
 
