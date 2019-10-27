@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\BlogPost;
 use App\Events\CommentPosted;
 use App\Http\Requests\StoreComment;
-
+use App\Http\Resources\Comment as CommentResource;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
 class PostCommentController extends Controller implements ShouldQueue
@@ -20,7 +20,10 @@ class PostCommentController extends Controller implements ShouldQueue
         // dump(is_array($post->comments));
         // dump(get_class($post->comments));
         // die;
-        return $post->comments()->with('user')->get();
+
+        return CommentResource::collection(($post->comments()->with('user')->get()));
+
+        //return $post->comments()->with('user')->get();
     }
 
     public function store(BlogPost $post, StoreComment $request)
