@@ -29,6 +29,10 @@
                 @endif
                 <a class="p-2 text-dark" href="{{ route('login') }}">Login</a>
             @else
+                <a class="p-2 text-dark"
+                    href="{{ route('user.show', ['user'=>Auth::user()->id]) }}">Profile</a>
+                <a class="p-2 text-dark"
+                    href="{{ route('user.edit', ['user'=>Auth::user()->id]) }}">Edit profile</a>
                 <a class="p-2 text-dark" href="{{ route('logout') }}"
                     onclick="event.preventDefault();document.getElementById('logout-form').submit();">
                     Logout ({{Auth::user()->name}})
