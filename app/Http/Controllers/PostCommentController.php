@@ -3,12 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\BlogPost;
+use App\Events\CommentPosted;
 use App\Http\Requests\StoreComment;
-use App\Jobs\NotifyUsersPostWasCommented;
-use App\Mail\CommentPosted;
-use App\Mail\CommentPostedMarkdown;
+
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Support\Facades\Mail;
 
 class PostCommentController extends Controller implements ShouldQueue
 {
@@ -24,23 +22,7 @@ class PostCommentController extends Controller implements ShouldQueue
             'user_id'=>$request->user()->id
         ]);
 
-        // Mail::to($post->user)->send(
-        //     //new CommentPosted($commment)
-        //     new CommentPostedMarkdown($commment)
-        // );
-
-        //$when=now()->addMinutes(1);
-
-        Mail::to($post->user)->queue(
-            new CommentPostedMarkdown($comment)
-        );
-
-        NotifyUsersPostWasCommented::dispatch($comment);
-
-        // Mail::to($post->user)->later(
-        //     $when,
-        //     new CommentPostedMarkdown($commment)
-        // );
+        event(new CommentPosted($comment));
 
         return redirect()->back()->withStatus('Comment was added!');
     }

@@ -48,19 +48,10 @@ class BlogPost extends Model
                 ->with('tags');
     }
 
-    public static function boot() {
+    public static function boot()
+    {
 
         static::addGlobalScope(new DeletedAdminScope);
-
         parent::boot();
-
-        static::deleting(function(BlogPost $blogPost) {
-            $blogPost->comments()->delete();
-            //$blogPost->image()->delete();
-        });
-
-        static::restoring(function (BlogPost $blogPost) {
-            $blogPost->comments()->restore();
-        });
     }
 }
